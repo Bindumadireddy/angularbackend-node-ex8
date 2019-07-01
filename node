@@ -1,0 +1,112 @@
+//'use strict';
+// const hapi=require('@hapi/hapi');
+// require("dotenv").config();
+// const mysql=require('mysql')
+
+// const init =async()=>{
+// const server= hapi.server({
+//     host:'localhost',
+//     port:8000
+// });
+// server.route({
+//     method:"GET",
+//     path:"/movies",
+//     handler:(request,reply)=>{
+//       return new Promise((resolve,reject)=>{
+//             const connection = mysql.createConnection({
+//                 host     : process.env.DB_HOST,
+//                 user     : process.env.DB_USER,
+//                 //password : process.env.DB_PASSWORD,
+//                 database : process.env.DB_NAME
+//               });
+//               connection.connect();
+     
+//               connection.query(`SELECT * from movies`, function (error,movies, fields) {
+//                 if (error) reject(error);
+//                 resolve(movies);
+//               });
+               
+//               connection.end();
+//       });
+        
+//     }
+    
+// });
+// await server.start();
+//   console.log("Server is started");
+   
+
+// };
+
+
+// init();
+var hapi=require('@hapi/hapi');
+require("dotenv").config();
+var mysql=require('mysql')
+
+var server=new hapi.Server({
+    host:'localhost',
+    port:8000,
+    routes:{
+      cors:true
+    }
+});
+server.route({
+    method:"GET",
+    path:"/movies",
+    handler:(request,reply)=>{
+      return new Promise((resolve,reject)=>{
+            var connection = mysql.createConnection({
+                host     : process.env.DB_HOST,
+                user     : process.env.DB_USER,
+                //password : process.env.DB_PASSWORD,
+                database : process.env.DB_NAME
+              });
+              connection.connect();
+     
+              connection.query(`SELECT * from movies`, function (error,movies, fields) {
+                if (error) reject(error);
+                resolve(movies);
+              });
+               
+              connection.end();
+        })
+        
+    }
+    
+});
+server.route({
+    method:"GET",
+    path:"/th",
+    handler:(request,reply)=>{
+      return new Promise((resolve,reject)=>{
+            var connection = mysql.createConnection({
+                host     : process.env.DB_HOST,
+                user     : process.env.DB_USER,
+                //password : process.env.DB_PASSWORD,
+                database : process.env.DB_NAME
+              });
+              connection.connect();
+     
+              connection.query(`SELECT * from th`, function (error,theaters, fields) {
+                if (error) reject(error);
+                resolve(theaters);
+              });
+               
+              connection.end();
+        })
+        
+    }
+    
+});
+server.start((err)=>{
+    if(err) throw err;
+    
+})
+
+
+console.log("Server is started")
+
+
+
+
